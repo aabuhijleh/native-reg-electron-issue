@@ -1,6 +1,26 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow } from "electron";
+import * as reg from "native-reg";
 import path from "path";
+
+getOutlookVersionPresent();
+
+function getOutlookVersionPresent(): void {
+  console.info("getOutlookVersionPresent - IN");
+  try {
+    const key = reg.openKey(
+      reg.HKLM,
+      "SOFTWARE\\Classes\\Outlook.Application\\CurVer",
+      reg.Access.READ
+    );
+    console.warn("Something goes wrong here (In Electron)");
+    const version = reg.getValue(key, "", ""); // default value
+    console.info(`getOutlookVersionPresent - version:[${version}]`);
+    reg.closeKey(key);
+  } catch (e) {
+    console.error("getOutlookVersionPresent - failure", e);
+  }
+}
 
 function createWindow() {
   // Create the browser window.
